@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
@@ -9,6 +10,9 @@ namespace XML_Exporter
     public partial class Form1 : Form
     {
         string treeViewSelectedNode = "";
+        List<string> ListTreeParents = new List<string>();
+        List<string> ListTreeNodes = new List<string>();
+        string searchNodeParent;
 
         public Form1()
         {
@@ -23,6 +27,7 @@ namespace XML_Exporter
 
             dataGridView1.DataSource = AuthorsDataSet;
             dataGridView1.DataMember = "columns";
+
         }
 
         private void ShowSchemaButton_Click(object sender, EventArgs e)
@@ -85,6 +90,10 @@ namespace XML_Exporter
 
             AddNode(node, treeView1.Nodes.Add(node.Name));
             treeView1.ExpandAll();
+
+            ListTreeNodes.Clear();
+            ListTreeParents.Clear();
+            returnNodesAndParents(treeView1.Nodes[0]);
         }
 
         private void buttonFold_Click(object sender, EventArgs e)
@@ -138,10 +147,48 @@ namespace XML_Exporter
                 var hittest = dataGridView1.HitTest(clientPoint.X, clientPoint.Y);
                 if (hittest.ColumnIndex != -1)
                     dataGridView1.Columns[hittest.ColumnIndex].HeaderText = cellvalue;
+
+                //load data from treeview
+                for (int i = 0; i < ListTreeNodes.Count; i++)
+                {
+                    if (ListTreeNodes[i] == cellvalue)
+                    {
+                        if (searchNodeParent == null)
+                        {
+                            searchNodeParent = ListTreeParents[i];
+                        }
+                        int dataGridViewRowCounter = 0;
+                        for (int j = ListTreeParents.IndexOf(ListTreeParents[i]); j < ListTreeParents.Count; j++)
+                        {
+                            if (ListTreeParents[j] == searchNodeParent)
+                            {
+                                dataGridView1[hittest.ColumnIndex, dataGridViewRowCounter].Value = ListTreeNodes[j];
+
+                                dataGridViewRowCounter++;
+                            }
+                        }
+                    }
+                }
+                searchNodeParent = null;
+            }
+        }
+
+        private void returnNodesAndParents(TreeNode root)
+        {
+            if (root.Parent != null)
+            {
+                ListTreeParents.Add(root.Parent.FullPath);
+                ListTreeNodes.Add(root.Text);
             }
 
-            //load data from treeview
-            
+            if (root.Nodes.Count > 0)
+            {
+                foreach (TreeNode item in root.Nodes)
+                {
+                    returnNodesAndParents(item);
+                }
+            }
+            return;
         }
 
         private void dataGridView1_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
