@@ -31,9 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.loadXMLBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.ReadXmlButton = new System.Windows.Forms.Button();
-            this.ShowSchemaButton = new System.Windows.Forms.Button();
             this.AuthorsDataSet = new System.Data.DataSet();
             this.WriteXML = new System.Windows.Forms.Button();
             this.treeView1 = new System.Windows.Forms.TreeView();
@@ -47,10 +45,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.AuthorsDataSet)).BeginInit();
             this.SuspendLayout();
             // 
-            // loadXMLBindingSource
-            // 
-            this.loadXMLBindingSource.DataSource = typeof(XML_Exporter.LoadXML);
-            // 
             // dataGridView1
             // 
             this.dataGridView1.AllowDrop = true;
@@ -58,21 +52,12 @@
             this.dataGridView1.Location = new System.Drawing.Point(12, 38);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(491, 289);
+            this.dataGridView1.Size = new System.Drawing.Size(819, 289);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellMouseLeave);
             this.dataGridView1.CellMouseMove += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseMove);
             this.dataGridView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridView1_DragDrop);
             this.dataGridView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.dataGridView1_DragEnter);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(509, 38);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(250, 289);
-            this.textBox1.TabIndex = 1;
             // 
             // ReadXmlButton
             // 
@@ -84,23 +69,13 @@
             this.ReadXmlButton.UseVisualStyleBackColor = true;
             this.ReadXmlButton.Click += new System.EventHandler(this.ReadXmlButton_Click);
             // 
-            // ShowSchemaButton
-            // 
-            this.ShowSchemaButton.Location = new System.Drawing.Point(167, 333);
-            this.ShowSchemaButton.Name = "ShowSchemaButton";
-            this.ShowSchemaButton.Size = new System.Drawing.Size(95, 23);
-            this.ShowSchemaButton.TabIndex = 3;
-            this.ShowSchemaButton.Text = "Show Schema";
-            this.ShowSchemaButton.UseVisualStyleBackColor = true;
-            this.ShowSchemaButton.Click += new System.EventHandler(this.ShowSchemaButton_Click);
-            // 
             // AuthorsDataSet
             // 
             this.AuthorsDataSet.DataSetName = "NewDataSet";
             // 
             // WriteXML
             // 
-            this.WriteXML.Location = new System.Drawing.Point(408, 333);
+            this.WriteXML.Location = new System.Drawing.Point(736, 333);
             this.WriteXML.Name = "WriteXML";
             this.WriteXML.Size = new System.Drawing.Size(95, 23);
             this.WriteXML.TabIndex = 4;
@@ -117,6 +92,7 @@
             this.treeView1.Size = new System.Drawing.Size(431, 289);
             this.treeView1.TabIndex = 5;
             this.treeView1.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeView1_ItemDrag);
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             this.treeView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseDown);
             // 
             // button1
@@ -179,9 +155,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.WriteXML);
-            this.Controls.Add(this.ShowSchemaButton);
             this.Controls.Add(this.ReadXmlButton);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.dataGridView1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -197,9 +171,7 @@
 
         private System.Windows.Forms.BindingSource loadXMLBindingSource;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button ReadXmlButton;
-        private System.Windows.Forms.Button ShowSchemaButton;
         private System.Data.DataSet AuthorsDataSet;
         private System.Windows.Forms.Button WriteXML;
         private System.Windows.Forms.TreeView treeView1;

@@ -5,13 +5,13 @@
 		<element_a_a>Value1</element_a_a>
 		<element_a_b>Value2</element_a_b>
 	</element_a>
-	<element_b>
-		<element_b_a>Value3</element_b_a>
+	<element_a>
+		<element_a_a>Value3</element_a_a>
 		<element_b_b>Value4</element_b_b>
-	</element_b>
-	<element_c>
-		<element_c_a>Value5</element_c_a>
+	</element_a>
+	<element_a>
+		<element_a_a>Value5</element_a_a>
 		<element_c_b>Value6</element_c_b>
 		<element_c_c>Value7</element_c_c>
-	</element_c>
+	</element_a>
 </root>

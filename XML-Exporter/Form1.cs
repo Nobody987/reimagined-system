@@ -12,7 +12,9 @@ namespace XML_Exporter
         string treeViewSelectedNode = "";
         List<string> ListTreeParents = new List<string>();
         List<string> ListTreeNodes = new List<string>();
-        string searchNodeParent;
+        List<string> ListTreeNodeValues = new List<string>();
+        DataTable dt;
+        List<string> ListDataTableCopyTypes = new List<string>();
 
         public Form1()
         {
@@ -23,18 +25,27 @@ namespace XML_Exporter
         {
             string filePath = @"..\..\templates\documentation_templates\technical_specification.xml";
 
-            AuthorsDataSet.ReadXml(filePath);
+            //AuthorsDataSet.ReadXml(filePath);
 
-            dataGridView1.DataSource = AuthorsDataSet;
-            dataGridView1.DataMember = "columns";
+            createDataTable(filePath);
+
+            //dataGridView1.DataSource = AuthorsDataSet;
+            //dataGridView1.DataMember = "columns";
 
         }
 
-        private void ShowSchemaButton_Click(object sender, EventArgs e)
+        private void createDataTable(string filePath)
         {
-            System.IO.StringWriter swXML = new System.IO.StringWriter();
-            AuthorsDataSet.WriteXmlSchema(swXML);
-            textBox1.Text = swXML.ToString();
+            dt = new DataTable("Technical_Specification");
+            XmlDocument document = new XmlDocument();
+            document.Load(filePath);
+
+            foreach (XmlNode item in document["root"]["columns"])
+            {
+                dt.Columns.Add(new DataColumn(item["name"].InnerText));
+                ListDataTableCopyTypes.Add(item["copy_type"].InnerText);
+            }
+            dataGridView1.DataSource = dt;
         }
 
         private void WriteXML_Click(object sender, EventArgs e)
@@ -79,6 +90,8 @@ namespace XML_Exporter
 
         private void button1_Click(object sender, EventArgs e)
         {
+            treeView1.Nodes.Clear();
+
             string FILE_NAME = textBox2.Text;
             string FILE_PATH = @"..\..\testObjects\" + FILE_NAME;
             //string FILE_PATH = @"..\..\testObjects\document.xml";
@@ -93,6 +106,7 @@ namespace XML_Exporter
 
             ListTreeNodes.Clear();
             ListTreeParents.Clear();
+            ListTreeNodeValues.Clear();
             returnNodesAndParents(treeView1.Nodes[0]);
         }
 
@@ -108,11 +122,12 @@ namespace XML_Exporter
 
         private void treeView1_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            if (treeView1.SelectedNode != null)
+            if (treeView1.SelectedNode != null && treeView1.SelectedNode.Parent != null)
             {
-                treeView1.DoDragDrop(treeView1.SelectedNode.Text, DragDropEffects.Copy);
+                treeView1.DoDragDrop(treeView1.SelectedNode, DragDropEffects.Copy);
+
+                treeViewSelectedNode = treeView1.SelectedNode.Parent.FullPath;
             }
-            treeViewSelectedNode = treeView1.SelectedNode.Parent.FullPath;
         }
 
         private void treeView1_MouseDown(object sender, MouseEventArgs e)
@@ -138,12 +153,20 @@ namespace XML_Exporter
 
         private void dataGridView1_DragDrop(object sender, DragEventArgs e)
         {
+            string searchNodeParent = null;
+            if (dataGridView1.DataSource == null)
+            {
+                return;
+            }
             Point clientPoint = dataGridView1.PointToClient(new Point(e.X, e.Y));
 
             // If the drag operation was a copy then add the row to the other control.
             if (e.Effect == DragDropEffects.Copy)
             {
-                string cellvalue = e.Data.GetData(typeof(string)) as string;
+                //string cellvalue = e.Data.GetData(typeof(string)) as string;
+                TreeNode CopiedTreeNode = e.Data.GetData(typeof(TreeNode)) as TreeNode;
+                string cellvalue = CopiedTreeNode.Text;
+                string parentnode = CopiedTreeNode.Parent.FullPath;
                 var hittest = dataGridView1.HitTest(clientPoint.X, clientPoint.Y);
                 if (hittest.ColumnIndex != -1)
                     dataGridView1.Columns[hittest.ColumnIndex].HeaderText = cellvalue;
@@ -151,7 +174,7 @@ namespace XML_Exporter
                 //load data from treeview
                 for (int i = 0; i < ListTreeNodes.Count; i++)
                 {
-                    if (ListTreeNodes[i] == cellvalue)
+                    if (ListTreeNodes[i] == cellvalue && ListTreeParents[i] == parentnode)
                     {
                         if (searchNodeParent == null)
                         {
@@ -160,12 +183,29 @@ namespace XML_Exporter
                         int dataGridViewRowCounter = 0;
                         for (int j = ListTreeParents.IndexOf(ListTreeParents[i]); j < ListTreeParents.Count; j++)
                         {
-                            if (ListTreeParents[j] == searchNodeParent)
+                            if (ListTreeParents[j] == searchNodeParent && ListTreeNodes[j] == cellvalue)
                             {
-                                dataGridView1[hittest.ColumnIndex, dataGridViewRowCounter].Value = ListTreeNodes[j];
+                                if (dataGridView1.Rows.Count - 1 == dataGridViewRowCounter)
+                                {
+                                    dt.Rows.Add();
+                                    //AuthorsDataSet.Tables["columns"].Rows.Add();
+                                }
+                                if (ListDataTableCopyTypes[hittest.ColumnIndex] == "1")
+                                {
+                                    for (int k = 0; k < dataGridView1.Rows.Count; k++)
+                                    {
+                                        dataGridView1[hittest.ColumnIndex, k].Value += ListTreeNodeValues[j] + " ";
+                                    }
+                                    continue;
+                                }
+
+                                dataGridView1[hittest.ColumnIndex, dataGridViewRowCounter].Value = ListTreeNodeValues[j];
 
                                 dataGridViewRowCounter++;
                             }
+
+                            if (j == ListTreeParents.Count - 1)
+                                return;
                         }
                     }
                 }
@@ -173,12 +213,17 @@ namespace XML_Exporter
             }
         }
 
-        private void returnNodesAndParents(TreeNode root)
+        private void returnNodesAndParents(TreeNode root) //za popunjavanje lista vrednosti nodova
         {
             if (root.Parent != null)
             {
                 ListTreeParents.Add(root.Parent.FullPath);
                 ListTreeNodes.Add(root.Text);
+                if (root.FirstNode != null)
+                {
+                    ListTreeNodeValues.Add(root.FirstNode.Text);
+                }
+                else ListTreeNodeValues.Add(null);
             }
 
             if (root.Nodes.Count > 0)
@@ -202,6 +247,16 @@ namespace XML_Exporter
             {
                 //dataGridView1[e.ColumnIndex, e.RowIndex].Selected = false;
             }
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (treeView1.SelectedNode.Parent == null)
+            {
+                textBox3.Text = null;
+                return;
+            }
+            textBox3.Text = treeView1.SelectedNode.Parent.FullPath;
         }
     }
 }
