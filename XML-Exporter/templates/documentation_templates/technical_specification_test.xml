@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <columns>
+    <column1>
+      <name>Kolona 1</name>
+      <copy_type>0</copy_type>
+    </column1>
+    <column2>
+      <name>Drilldown dimensions</name>
+      <copy_type>1</copy_type>
+    </column2>
+    <column3>
+      <name>Kolona 3</name>
+      <copy_type>0</copy_type>
+    </column3>
+    <column4>
+      <name>Kolona 4</name>
+      <copy_type>0</copy_type>
+    </column4>
+  </columns>
+  
+</root>

@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <columns>
+    <column1>
+      <name>KPI-ID</name>
+      <copy_type>0</copy_type>
+      <copy_node></copy_node>
+    </column1>
+    <column2>
+      <name>Name (German)</name>
+      <copy_type>0</copy_type>
+    </column2>
+    <column3>
+      <name>Name (English)</name>
+      <copy_type>0</copy_type>
+    </column3>
+    <column4>
+      <name>Source system</name>
+      <copy_type>0</copy_type>
+    </column4>
+    <column5>
+      <name>Tables</name>
+      <copy_type>0</copy_type>
+    </column5>
+    <column6>
+      <name>Conjunction</name>
+      <copy_type>0</copy_type>
+    </column6>
+    <column7>
+      <name>Calculation</name>
+      <copy_type>0</copy_type>
+    </column7>
+    <column8>
+      <name>Time dimension</name>
+      <copy_type>0</copy_type>
+    </column8>
+    <column9>
+      <name>Filter</name>
+      <copy_type>0</copy_type>
+    </column9>
+    <column10>
+      <name>Drilldown dimensions</name>
+      <copy_type>1</copy_type>
+    </column10>
+    <column11>
+      <name>Number format</name>
+      <copy_type>0</copy_type>
+    </column11>
+    <column12>
+      <name>KPI owner</name>
+      <copy_type>0</copy_type>
+    </column12>
+    <column13>
+      <name>SQL-Statement</name>
+      <copy_type>0</copy_type>
+    </column13>
+  </columns>
+  
+</root>

@@ -1,0 +1,240 @@
+﻿sub ShowSelection
+	
+	set DOCUMENT = ActiveDocument
+	set v = ActiveDocument.GetVariable("vSelectionStatus")		
+	set vObjectMove = ActiveDocument.GetVariable("vObjectMove")	
+	set vHideSelectionMove =  ActiveDocument.GetVariable("vSelectionStatus_move")	
+	segments = Split(vObjectMove.GetContent.String," ")
+	if v.GetContent.String = "1" then
+
+		for i = 0 to DOCUMENT.NoOfSheets - 1
+		 
+			set sh = DOCUMENT.GetSheet(i)
+			
+			for j = 0 to sh.NoOfSheetObjects-1
+				
+				set obj = sh.SheetObjects(j)
+				id = Ucase(Mid(obj.GetObjectId,10,2))
+				
+				for each segment in segments
+					if id = Ucase(segment) then
+						set fr = obj.GetFrameDef	
+						pos = fr.Rect
+						pos.Top = pos.Top - vHideSelectionMove.GetContent.String
+						obj.SetFrameDef fr
+					end if
+				next
+			next			
+		next	
+		v.SetContent "0", true	
+	
+	else
+
+		for i = 0 to DOCUMENT.NoOfSheets - 1
+		 
+			set sh = DOCUMENT.GetSheet(i)
+			
+			for j = 0 to sh.NoOfSheetObjects-1
+				
+				set obj = sh.SheetObjects(j)
+				id = Ucase(Mid(obj.GetObjectId,10,2))
+				
+				for each segment in segments
+					if id = Ucase(segment) then
+						set fr = obj.GetFrameDef	
+						pos = fr.Rect
+						'ActiveDocument.ShowPopup "Hi there " + id, 2000
+						pos.Top = pos.Top + vHideSelectionMove.GetContent.String
+						obj.SetFrameDef fr
+					end if
+				next
+			next			
+		next	
+		v.SetContent "1", true		
+	end if
+end sub
+
+sub ShowAdvancedSelection
+	
+	set DOCUMENT = ActiveDocument
+	set v = ActiveDocument.GetVariable("vAdvancedSelectionStatus")
+	set vObjectMove = ActiveDocument.GetVariable("vObjectMove")	
+	set vAdvancedMove =  ActiveDocument.GetVariable("vAdvancedSelectionStatus_move")	
+	segments = Split(vObjectMove.GetContent.String," ")
+	if v.GetContent.String = "1" then
+		
+		for i = 0 to DOCUMENT.NoOfSheets - 1
+		 
+			set sh = DOCUMENT.GetSheet(i)
+			
+			for j = 0 to sh.NoOfSheetObjects-1
+				
+				set obj = sh.SheetObjects(j)
+				id = Ucase(Mid(obj.GetObjectId,10,2))
+				
+				for each segment in segments
+					if id = Ucase(segment) then
+						set fr = obj.GetFrameDef	
+						pos = fr.Rect
+						'ActiveDocument.ShowPopup "Hi there " + id, 2000
+						pos.Top = pos.Top - vAdvancedMove.GetContent.String
+						obj.SetFrameDef fr
+					end if
+				next
+			next			
+		next	
+		v.SetContent "0", true	
+	
+	else
+		
+		for i = 0 to DOCUMENT.NoOfSheets - 1
+		 
+			set sh = DOCUMENT.GetSheet(i)
+			
+			for j = 0 to sh.NoOfSheetObjects-1
+				
+				set obj = sh.SheetObjects(j)
+				id = Ucase(Mid(obj.GetObjectId,10,2))
+								
+				for each segment in segments
+					if id = Ucase(segment) then
+						set fr = obj.GetFrameDef	
+						pos = fr.Rect
+						'ActiveDocument.ShowPopup "Hi there " + id, 2000
+						pos.Top = pos.Top + vAdvancedMove.GetContent.String
+						obj.SetFrameDef fr
+					end if
+				next
+			next			
+		next	
+		v.SetContent "1", true		
+	end if
+end sub  
+
+sub ShowAdvancedSelectionBACK_FORWARD
+	
+	set DOCUMENT = ActiveDocument
+	set v = ActiveDocument.GetVariable("vAdvancedSelectionStatus")
+	set vObjectMove = ActiveDocument.GetVariable("vObjectMove")	
+	set vAdvancedMove =  ActiveDocument.GetVariable("vAdvancedSelectionStatus_move")	
+	segments = Split(vObjectMove.GetContent.String," ")
+	
+	set obj = ActiveDocument.GetSheetObject("CT03")
+    pos01 = obj.GetRect
+    'ActiveDocument.ShowPopup pos01.Top 
+    
+	if v.GetContent.String = "1" AND (pos01.Top = 168 or pos01.Top = 123) then
+		
+		for i = 0 to DOCUMENT.NoOfSheets - 1
+		 
+			set sh = DOCUMENT.GetSheet(i)
+			
+			for j = 0 to sh.NoOfSheetObjects-1
+				
+				set obj = sh.SheetObjects(j)
+				id = Ucase(Mid(obj.GetObjectId,10,2))
+				
+				for each segment in segments
+					if id = Ucase(segment) then
+						set fr = obj.GetFrameDef	
+						pos = fr.Rect
+						'ActiveDocument.ShowPopup "Hi there " + id, 2000
+						pos.Top = pos.Top + vAdvancedMove.GetContent.String
+						obj.SetFrameDef fr
+					end if
+				next
+			next			
+		next	
+		'v.SetContent "0", true	
+	
+	else IF v.GetContent.String = "0" AND (pos01.Top = 440 or pos01.Top = 395) then
+		
+		for i = 0 to DOCUMENT.NoOfSheets - 1
+		 
+			set sh = DOCUMENT.GetSheet(i)
+			
+			for j = 0 to sh.NoOfSheetObjects-1
+				
+				set obj = sh.SheetObjects(j)
+				id = Ucase(Mid(obj.GetObjectId,10,2))
+								
+				for each segment in segments
+					if id = Ucase(segment) then
+						set fr = obj.GetFrameDef	
+						pos = fr.Rect
+						'ActiveDocument.ShowPopup "Hi there " + id, 2000
+						pos.Top = pos.Top - vAdvancedMove.GetContent.String
+						obj.SetFrameDef fr
+					end if
+				next
+			next			
+		next	
+		'v.SetContent "1", true		
+	end if
+	END IF
+end sub  
+
+
+
+sub ShowSelectionBACK_FORWARD
+	
+	set DOCUMENT = ActiveDocument
+	set v = ActiveDocument.GetVariable("vSelectionStatus")		
+	set vObjectMove = ActiveDocument.GetVariable("vObjectMove")	
+	set vHideSelectionMove =  ActiveDocument.GetVariable("vSelectionStatus_move")	
+	segments = Split(vObjectMove.GetContent.String," ")
+	
+	set obj = ActiveDocument.GetSheetObject("CT03")
+    pos02 = obj.GetRect
+    'ActiveDocument.ShowPopup pos01.Top 
+    
+	if v.GetContent.String = "1" AND (pos02.Top = 123 or pos02.Top = 395) then
+		
+		for i = 0 to DOCUMENT.NoOfSheets - 1
+		 
+			set sh = DOCUMENT.GetSheet(i)
+			
+			for j = 0 to sh.NoOfSheetObjects-1
+				
+				set obj = sh.SheetObjects(j)
+				id = Ucase(Mid(obj.GetObjectId,10,2))
+				
+				for each segment in segments
+					if id = Ucase(segment) then
+						set fr = obj.GetFrameDef	
+						pos = fr.Rect
+						'ActiveDocument.ShowPopup "Hi there " + id, 2000
+						pos.Top = pos.Top + vHideSelectionMove.GetContent.String
+						obj.SetFrameDef fr
+					end if
+				next
+			next			
+		next	
+		'v.SetContent "0", true	
+	
+	else IF v.GetContent.String = "0" AND (pos02.Top = 168 or pos02.Top = 440) then
+		
+		for i = 0 to DOCUMENT.NoOfSheets - 1
+		 
+			set sh = DOCUMENT.GetSheet(i)
+			
+			for j = 0 to sh.NoOfSheetObjects-1
+				
+				set obj = sh.SheetObjects(j)
+				id = Ucase(Mid(obj.GetObjectId,10,2))
+								
+				for each segment in segments
+					if id = Ucase(segment) then
+						set fr = obj.GetFrameDef	
+						pos = fr.Rect
+						'ActiveDocument.ShowPopup "Hi there " + id, 2000
+						pos.Top = pos.Top - vHideSelectionMove.GetContent.String
+						obj.SetFrameDef fr
+					end if
+				next
+			next			
+		next	
+		'v.SetContent "1", true		
+	end if
+	END IF
+end sub  

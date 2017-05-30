@@ -85,6 +85,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="templates\documentation_templates\technical_specification.xml" />
+    <Content Include="templates\documentation_templates\technical_specification_backup.xml" />
+    <Content Include="templates\documentation_templates\technical_specification_test.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
