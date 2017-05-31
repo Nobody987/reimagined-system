@@ -19,6 +19,8 @@ namespace XML_Exporter
         List<string> ListDataTableCopyNodesPath = new List<string>();
         List<string> ListDataTableCopyNodes = new List<string>();
 
+        KeyValuePair<string, string> KVPFieldsAndTables = new KeyValuePair<string, string>("no value", "no value");
+
         public Form1()
         {
             InitializeComponent();
@@ -190,12 +192,25 @@ namespace XML_Exporter
             //if (columnIndex != -1)
             //    dataGridView1.Columns[columnIndex].HeaderText = cellvalue;
 
-            if (ListDataTableCopyTypes[columnIndex] == "1")
+            if (ListDataTableCopyTypes[columnIndex] == "1" || ListDataTableCopyTypes[columnIndex] == "2")
             {
                 for (int k = 0; k < dataGridView1.Rows.Count; k++) //remove values from column
                 {
                     dataGridView1[columnIndex, k].Value = "";
                 }
+            }
+            //else if (ListDataTableCopyTypes[columnIndex] == "2")
+            //{
+
+            //    for (int k = 0; k < dataGridView1.Rows.Count; k++) //remove values from column
+            //    {
+            //        dataGridView1[columnIndex, k].Value = "";
+            //    }
+            //}
+
+            if (ListDataTableCopyTypes[columnIndex] == "2")
+            {
+                loadDataFromDocInternals();
             }
 
             for (int i = 0; i < ListTreeNodes.Count; i++)
@@ -237,6 +252,61 @@ namespace XML_Exporter
                 }
             }
             searchNodeParent = null;
+        }
+
+        private void loadDataFromDocInternals()
+        {
+            string filePath = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\DocInternals.xml";
+
+            XmlDocument document = new XmlDocument();
+            document.Load(filePath);
+
+            List<string> ListFieldsInDocInternals = new List<string>();
+            List<string> ListFieldsInDocInternalsExcluded = new List<string>();
+
+
+            //foreach (XmlNode item in document.SelectNodes(@"\DocInternals\FieldTags\ScriptBased\"))
+            foreach (XmlNode node in document.SelectNodes(@"/DocInternals/FieldTags/ScriptBased/FieldTagData"))
+            {
+                if (node["Tag"].InnerText == "$hidden")
+                {
+                    foreach (XmlNode subnode in node.ChildNodes)
+                    {
+                        if (subnode.Name == "FieldNames")
+                        {
+                            foreach (XmlNode subsubnode in subnode.ChildNodes)
+                            {
+                                if (!ListFieldsInDocInternalsExcluded.Contains(subsubnode.InnerText))
+                                {
+                                    ListFieldsInDocInternalsExcluded.Add(subsubnode.InnerText);
+                                }
+                            }
+                        }
+                    }
+                    continue;
+                }
+
+                foreach (XmlNode subnode in node.ChildNodes)
+                {
+                    if (subnode.Name == "FieldNames")
+                    {
+                        foreach (XmlNode subsubnode in subnode.ChildNodes)
+                        {
+                            if (!ListFieldsInDocInternals.Contains(subsubnode.InnerText))
+                            {
+                                ListFieldsInDocInternals.Add(subsubnode.InnerText);
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (var item in ListFieldsInDocInternalsExcluded)
+            {
+                if (ListFieldsInDocInternals.Contains(item))
+                {
+                    ListFieldsInDocInternals.Remove(item);
+                }
+            }
         }
 
         private void returnNodesAndParents(TreeNode root) //za popunjavanje lista vrednosti nodova
@@ -289,7 +359,7 @@ namespace XML_Exporter
         {
             for (int i = 0; i < ListDataTableCopyNodesPath.Count; i++)
             {
-                if (ListDataTableCopyNodesPath[i] != "")
+                if (ListDataTableCopyTypes[i] != "")
                 {
                     loadDataFromTree(ListDataTableCopyNodes[i], ListDataTableCopyNodesPath[i], i);
                 }
