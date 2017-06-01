@@ -1,0 +1,22 @@
+﻿SUB AddExpression
+set DOCUMENT = ActiveDocument	
+	set vObjectIDs = ActiveDocument.GetVariable("vObjectIDs")		
+	segments = Split(vObjectIDs.GetContent.String," ")
+		for i = 0 to DOCUMENT.NoOfSheets - 1
+		 
+			set sh = DOCUMENT.GetSheet(i)
+			
+			for j = 0 to sh.NoOfSheetObjects-1
+				
+				set obj = sh.SheetObjects(j)
+				id = Ucase(Mid(obj.GetObjectId,10))
+				
+				for each segment in segments						
+					if id = Ucase(segment) then
+						ActiveDocument.ShowPopup "Hi there " + id, 2000		
+					end if
+				next
+			next			
+		next	
+		
+END SUB

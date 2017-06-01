@@ -19,7 +19,7 @@ namespace XML_Exporter
         List<string> ListDataTableCopyNodesPath = new List<string>();
         List<string> ListDataTableCopyNodes = new List<string>();
 
-        KeyValuePair<string, string> KVPFieldsAndTables = new KeyValuePair<string, string>("no value", "no value");
+        List<KeyValuePair<string, string>> ListKVPFieldsAndTables = new List<KeyValuePair<string, string>>();
 
         public Form1()
         {
@@ -211,6 +211,7 @@ namespace XML_Exporter
             if (ListDataTableCopyTypes[columnIndex] == "2")
             {
                 loadDataFromDocInternals();
+                CopyType2(6, columnIndex);
             }
 
             for (int i = 0; i < ListTreeNodes.Count; i++)
@@ -254,58 +255,87 @@ namespace XML_Exporter
             searchNodeParent = null;
         }
 
-        private void loadDataFromDocInternals()
+        private void CopyType2(int columnIndex, int copyLocationIndex)
         {
-            string filePath = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\DocInternals.xml";
-
-            XmlDocument document = new XmlDocument();
-            document.Load(filePath);
-
-            List<string> ListFieldsInDocInternals = new List<string>();
-            List<string> ListFieldsInDocInternalsExcluded = new List<string>();
-
-
-            //foreach (XmlNode item in document.SelectNodes(@"\DocInternals\FieldTags\ScriptBased\"))
-            foreach (XmlNode node in document.SelectNodes(@"/DocInternals/FieldTags/ScriptBased/FieldTagData"))
+            for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
             {
-                if (node["Tag"].InnerText == "$hidden")
+                foreach (KeyValuePair<string, string> KVP in ListKVPFieldsAndTables)
                 {
-                    foreach (XmlNode subnode in node.ChildNodes)
+                    if (dataGridView1.Rows[i].Cells[columnIndex].Value.ToString().Contains(KVP.Key))
                     {
-                        if (subnode.Name == "FieldNames")
+                        if (!dataGridView1.Rows[i].Cells[copyLocationIndex].Value.ToString().Contains(KVP.Value))
                         {
-                            foreach (XmlNode subsubnode in subnode.ChildNodes)
-                            {
-                                if (!ListFieldsInDocInternalsExcluded.Contains(subsubnode.InnerText))
-                                {
-                                    ListFieldsInDocInternalsExcluded.Add(subsubnode.InnerText);
-                                }
-                            }
-                        }
-                    }
-                    continue;
-                }
-
-                foreach (XmlNode subnode in node.ChildNodes)
-                {
-                    if (subnode.Name == "FieldNames")
-                    {
-                        foreach (XmlNode subsubnode in subnode.ChildNodes)
-                        {
-                            if (!ListFieldsInDocInternals.Contains(subsubnode.InnerText))
-                            {
-                                ListFieldsInDocInternals.Add(subsubnode.InnerText);
-                            }
+                            dataGridView1.Rows[i].Cells[copyLocationIndex].Value += KVP.Value;
                         }
                     }
                 }
             }
-            foreach (var item in ListFieldsInDocInternalsExcluded)
+        }
+
+        private void loadDataFromDocInternals()
+        {
+            ListKVPFieldsAndTables.Clear();
+
+            string filePathDocInternals = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\DocInternals.xml";
+            //string filePathDocInternals = @"..\..\testObjects\ExcelToQV - Copy-prj\DocInternals.xml";
+            //string filePathAllProperties = @"..\..\testObjects\ExcelToQV - Copy-prj\AllProperties.xml";
+            string filePathAllProperties = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\AllProperties.xml";
+
+            XmlDocument AllProperties = new XmlDocument();
+            AllProperties.Load(filePathAllProperties);
+
+            List<string> ListFieldsInAllProperties = new List<string>();
+            List<string> ListTables = new List<string>();
+
+            foreach (XmlNode node in AllProperties.SelectNodes(@"/AllProperties/FieldProperties/FieldProperties/Name"))
             {
-                if (ListFieldsInDocInternals.Contains(item))
+                ListFieldsInAllProperties.Add(node.InnerText);
+            }
+
+            XmlDocument DocInternals = new XmlDocument();
+            DocInternals.Load(filePathDocInternals);
+
+            int previousNumber = 0;
+            string field = "no_value";
+            string table = "no_value";
+
+            foreach (XmlNode node in DocInternals.SelectNodes(@"/DocInternals/FieldSrcTables/String"))
+            {
+
+                if (previousNumber == 0) //ako JE prva iteracija
                 {
-                    ListFieldsInDocInternals.Remove(item);
+                    //previousValue = node.InnerText;
+                    previousNumber = int.Parse(node.InnerText);
+                    continue;
                 }
+                else if (previousNumber != 0) //ako NIJE prva iteracija
+                {
+                    int number;
+                    bool resultCurrent = int.TryParse(node.InnerText, out number);
+
+                    if (previousNumber != -1 && resultCurrent) //prethodni rezultat JE broj i trenutni rezulat JE broj
+                    {
+                        continue;
+                    }
+                    else if (previousNumber != -1 && resultCurrent == false) //prethodni rezultat JE broj i trenutni rezulat NIJE broj
+                    {
+                        field = ListFieldsInAllProperties[previousNumber];
+                        table = node.InnerText;
+                        previousNumber = -1;
+                    }
+                    else if (previousNumber == -1 && resultCurrent == false) //prethodni rezultat NIJE broj i trenutni rezulat NIJE broj
+                    {
+                        field = ListKVPFieldsAndTables[ListKVPFieldsAndTables.Count - 1].Key;
+                        table = node.InnerText;
+                        previousNumber = -1;
+                    }
+                    else if (previousNumber == -1 && resultCurrent == true) //prethodni rezultat NIJE broj i trenutni rezulat JE broj
+                    {
+                        previousNumber = int.Parse(node.InnerText);
+                        continue;
+                    }
+                }
+                ListKVPFieldsAndTables.Add(new KeyValuePair<string, string>(field, table));
             }
         }
 
@@ -359,7 +389,15 @@ namespace XML_Exporter
         {
             for (int i = 0; i < ListDataTableCopyNodesPath.Count; i++)
             {
-                if (ListDataTableCopyTypes[i] != "")
+                if (ListDataTableCopyTypes[i] != "" || ListDataTableCopyTypes[i] != "2")
+                {
+                    loadDataFromTree(ListDataTableCopyNodes[i], ListDataTableCopyNodesPath[i], i);
+                }
+            }
+
+            for (int i = 0; i < ListDataTableCopyNodesPath.Count; i++)
+            {
+                if (ListDataTableCopyTypes[i] == "2")
                 {
                     loadDataFromTree(ListDataTableCopyNodes[i], ListDataTableCopyNodesPath[i], i);
                 }
