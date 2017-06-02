@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.OleDb;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Xml;
@@ -105,6 +106,7 @@ namespace XML_Exporter
             treeView1.Nodes.Clear();
 
             string FILE_NAME = textBox2.Text;
+            //string FILE_PATH = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\" + FILE_NAME;
             string FILE_PATH = @"..\..\testObjects\" + FILE_NAME;
             //string FILE_PATH = @"..\..\testObjects\document.xml";
 
@@ -402,6 +404,39 @@ namespace XML_Exporter
                     loadDataFromTree(ListDataTableCopyNodes[i], ListDataTableCopyNodesPath[i], i);
                 }
             }
+            for (int i = 0; i < ListDataTableCopyNodesPath.Count; i++) //dodaje ID za svaki red
+            {
+                if (ListDataTableCopyTypes[i] == "")
+                {
+                    for (int j = 0; j < dataGridView1.Rows.Count - 1; j++)
+                    {
+                        dataGridView1.Rows[j].Cells[i].Value = j;
+                    }
+                }
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            DataTable sheetData = LoadWorksheetInDataTable(@"..\..\testObjects\92 - Translation\KPI_Translation.xlsx", "Translator");
+        }
+
+        DataTable LoadWorksheetInDataTable(string fileName, string sheetName)
+        {
+            DataTable sheetData = new DataTable();
+            using (OleDbConnection conn = this.returnConnection(fileName))
+            {
+                conn.Open();
+                // retrieve the data using data adapter
+                OleDbDataAdapter sheetAdapter = new OleDbDataAdapter("select * from " + sheetName, conn);
+                sheetAdapter.Fill(sheetData);
+            }
+            return sheetData;
+        }
+
+        private OleDbConnection returnConnection(string fileName)
+        {
+            return new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileName + "; Extended Properties=Excel 12.0;");
         }
     }
 }

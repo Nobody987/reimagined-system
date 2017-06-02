@@ -3,7 +3,7 @@
   <columns>
     <column>
       <name>KPI-ID</name>
-      <copy_type>0</copy_type>
+      <copy_type></copy_type>
       <copy_node></copy_node>
       <copy_node_parent></copy_node_parent>
     </column>
