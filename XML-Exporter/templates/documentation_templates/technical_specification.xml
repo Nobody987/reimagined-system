@@ -5,79 +5,106 @@
       <name>KPI-ID</name>
       <copy_type></copy_type>
       <copy_node></copy_node>
-      <copy_node_parent></copy_node_parent>
+      <copy_node_parent></copy_node_parent>      
+      <read_csv_file></read_csv_file>
+      <read_csv_column></read_csv_column>
+
     </column>
     <column>
       <name>Name (German)</name>
-      <copy_type>0</copy_type>
+      <copy_type>3</copy_type>
       <copy_node>v</copy_node>
       <copy_node_parent>GraphProperties\_ExpressionVisuals\ExpressionVisualDef\Label</copy_node_parent>
+      <read_csv_file>..\..\92 - Translation\KPI_Translation - Copy.csv</read_csv_file>
+      <read_csv_column>DE</read_csv_column>
     </column>
     <column>
       <name>Name (English)</name>
-      <copy_type>0</copy_type>
+      <copy_type>3</copy_type>
       <copy_node>v</copy_node>
       <copy_node_parent>GraphProperties\_ExpressionVisuals\ExpressionVisualDef\Label</copy_node_parent>
+      <read_csv_file>..\..\92 - Translation\KPI_Translation - Copy.csv</read_csv_file>
+      <read_csv_column>EN</read_csv_column>
     </column>
     <column>
       <name>Source system</name>
       <copy_type>0</copy_type>
       <copy_node></copy_node>
       <copy_node_parent></copy_node_parent>
+      <read_csv_file></read_csv_file>
+      <read_csv_column></read_csv_column>
     </column>
     <column>
       <name>Tables</name>
       <copy_type>2</copy_type>
       <copy_node></copy_node>
       <copy_node_parent></copy_node_parent>
+      <read_csv_file></read_csv_file>
+      <read_csv_column></read_csv_column>
     </column>
     <column>
       <name>Conjunction</name>
       <copy_type>0</copy_type>
       <copy_node></copy_node>
       <copy_node_parent></copy_node_parent>
+      <read_csv_file></read_csv_file>
+      <read_csv_column></read_csv_column>
     </column>
     <column>
       <name>Calculation</name>
       <copy_type>0</copy_type>
       <copy_node>v</copy_node>
       <copy_node_parent>GraphProperties\_ExpressionDatas\ExpressionData\Definition</copy_node_parent>
+      <read_csv_file></read_csv_file>
+      <read_csv_column></read_csv_column>
     </column>
     <column>
       <name>Time dimension</name>
       <copy_type>0</copy_type>
       <copy_node></copy_node>
       <copy_node_parent></copy_node_parent>
+      <read_csv_file></read_csv_file>
+      <read_csv_column></read_csv_column>
     </column>
     <column>
       <name>Filter</name>
       <copy_type>0</copy_type>
       <copy_node></copy_node>
       <copy_node_parent></copy_node_parent>
+      <read_csv_file></read_csv_file>
+      <read_csv_column></read_csv_column>
     </column>
     <column>
       <name>Drilldown dimensions</name>
       <copy_type>1</copy_type>
       <copy_node>Name</copy_node>
       <copy_node_parent>GraphProperties\Dimensions\ChartDimensionDataDef\PseudoDef</copy_node_parent>
+      <read_csv_file></read_csv_file>
+      <read_csv_column></read_csv_column>
     </column>
     <column>
       <name>Number format</name>
       <copy_type>0</copy_type>
       <copy_node>Fmt</copy_node>
       <copy_node_parent>GraphProperties\_ExpressionVisuals\ExpressionVisualDef\NumberPresentation</copy_node_parent>
+      <read_csv_file></read_csv_file>
+      <read_csv_column></read_csv_column>
     </column>
     <column>
       <name>KPI owner</name>
       <copy_type>0</copy_type>
       <copy_node></copy_node>
       <copy_node_parent></copy_node_parent>
+      <read_csv_file></read_csv_file>
+      <read_csv_column></read_csv_column>
     </column>
     <column>
       <name>SQL-Statement</name>
       <copy_type>0</copy_type>
       <copy_node></copy_node>
       <copy_node_parent></copy_node_parent>
+      <read_csv_file></read_csv_file>
+      <read_csv_column></read_csv_column>
     </column>
   </columns>
   

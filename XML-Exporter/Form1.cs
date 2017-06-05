@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.OleDb;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -10,6 +10,8 @@ namespace XML_Exporter
 {
     public partial class Form1 : Form
     {
+        string winsped_location = @"";
+
         string treeViewSelectedNode = "";
         List<string> ListTreeParents = new List<string>();
         List<string> ListTreeNodes = new List<string>();
@@ -20,7 +22,11 @@ namespace XML_Exporter
         List<string> ListDataTableCopyNodesPath = new List<string>();
         List<string> ListDataTableCopyNodes = new List<string>();
 
+        List<string> ListReadCSVFile = new List<string>();
+        List<string> ListReadCSVColumn = new List<string>();
+
         List<KeyValuePair<string, string>> ListKVPFieldsAndTables = new List<KeyValuePair<string, string>>();
+        private DataTable dataTableCSV;
 
         public Form1()
         {
@@ -47,6 +53,9 @@ namespace XML_Exporter
             ListDataTableCopyNodes.Clear();
             ListDataTableCopyNodesPath.Clear();
 
+            ListReadCSVFile.Clear();
+            ListReadCSVColumn.Clear();
+
             dt = new DataTable("Technical_Specification");
             XmlDocument document = new XmlDocument();
             document.Load(filePath);
@@ -57,6 +66,9 @@ namespace XML_Exporter
                 ListDataTableCopyTypes.Add(item["copy_type"].InnerText);
                 ListDataTableCopyNodes.Add(item["copy_node"].InnerText);
                 ListDataTableCopyNodesPath.Add(item["copy_node_parent"].InnerText);
+
+                ListReadCSVFile.Add(item["read_csv_file"].InnerText);
+                ListReadCSVColumn.Add(item["read_csv_column"].InnerText);
             }
             dataGridView1.DataSource = dt;
         }
@@ -106,8 +118,8 @@ namespace XML_Exporter
             treeView1.Nodes.Clear();
 
             string FILE_NAME = textBox2.Text;
-            //string FILE_PATH = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\" + FILE_NAME;
-            string FILE_PATH = @"..\..\testObjects\" + FILE_NAME;
+            string FILE_PATH = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\80 - Application\WinSped - Transport Management - Tyres DB1 Analysis-prj\" + FILE_NAME;
+            //string FILE_PATH = @"..\..\testObjects\" + FILE_NAME;
             //string FILE_PATH = @"..\..\testObjects\document.xml";
 
             XmlDocument document = new XmlDocument();
@@ -210,11 +222,18 @@ namespace XML_Exporter
             //    }
             //}
 
-            if (ListDataTableCopyTypes[columnIndex] == "2")
-            {
-                loadDataFromDocInternals();
-                CopyType2(6, columnIndex);
-            }
+            //if (ListDataTableCopyTypes[columnIndex] == "2")
+            //{
+            //    loadDataFromDocInternals();
+            //    CopyType2(6, columnIndex);
+            //    return;
+            //}
+
+            //if (ListDataTableCopyTypes[columnIndex] == "3")
+            //{
+            //    CopyType3(columnIndex, ListReadCSVColumn[columnIndex]);
+            //    return;
+            //}
 
             for (int i = 0; i < ListTreeNodes.Count; i++)
             {
@@ -257,6 +276,20 @@ namespace XML_Exporter
             searchNodeParent = null;
         }
 
+        private void CopyType3(int columnIndex, string CSVColumnToCopy)
+        {
+            for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+            {
+                foreach (DataRow item in dataTableCSV.Rows)
+                {
+                    if (dataGridView1.Rows[i].Cells[columnIndex].Value.ToString().Contains(item.Field<string>(0)))
+                    {
+                        dataGridView1.Rows[i].Cells[columnIndex].Value = item.Field<string>(CSVColumnToCopy);
+                    }
+                }
+            }
+        }
+
         private void CopyType2(int columnIndex, int copyLocationIndex)
         {
             for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
@@ -278,10 +311,10 @@ namespace XML_Exporter
         {
             ListKVPFieldsAndTables.Clear();
 
-            string filePathDocInternals = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\DocInternals.xml";
+            string filePathDocInternals = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\80 - Application\WinSped - Transport Management - Tyres DB1 Analysis-prj\DocInternals.xml";
             //string filePathDocInternals = @"..\..\testObjects\ExcelToQV - Copy-prj\DocInternals.xml";
             //string filePathAllProperties = @"..\..\testObjects\ExcelToQV - Copy-prj\AllProperties.xml";
-            string filePathAllProperties = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\AllProperties.xml";
+            string filePathAllProperties = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\80 - Application\WinSped - Transport Management - Tyres DB1 Analysis-prj\AllProperties.xml";
 
             XmlDocument AllProperties = new XmlDocument();
             AllProperties.Load(filePathAllProperties);
@@ -364,19 +397,6 @@ namespace XML_Exporter
             return;
         }
 
-        private void dataGridView1_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
-            {
-                //dataGridView1[e.ColumnIndex, e.RowIndex].Selected = false;
-            }
-        }
-
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (treeView1.SelectedNode.Parent == null)
@@ -391,7 +411,7 @@ namespace XML_Exporter
         {
             for (int i = 0; i < ListDataTableCopyNodesPath.Count; i++)
             {
-                if (ListDataTableCopyTypes[i] != "" || ListDataTableCopyTypes[i] != "2")
+                if (ListDataTableCopyTypes[i] != "" && ListDataTableCopyTypes[i] != "2")
                 {
                     loadDataFromTree(ListDataTableCopyNodes[i], ListDataTableCopyNodesPath[i], i);
                 }
@@ -401,9 +421,21 @@ namespace XML_Exporter
             {
                 if (ListDataTableCopyTypes[i] == "2")
                 {
-                    loadDataFromTree(ListDataTableCopyNodes[i], ListDataTableCopyNodesPath[i], i);
+                    loadDataFromDocInternals();
+                    CopyType2(6, i);
+                    //loadDataFromTree(ListDataTableCopyNodes[i], ListDataTableCopyNodesPath[i], i);
                 }
             }
+
+            for (int i = 0; i < ListDataTableCopyNodesPath.Count; i++)
+            {
+                if (ListDataTableCopyTypes[i] == "3")
+                {
+                    CopyType3(i, ListReadCSVColumn[i]);
+                    //loadDataFromTree(ListDataTableCopyNodes[i], ListDataTableCopyNodesPath[i], i);
+                }
+            }
+
             for (int i = 0; i < ListDataTableCopyNodesPath.Count; i++) //dodaje ID za svaki red
             {
                 if (ListDataTableCopyTypes[i] == "")
@@ -414,29 +446,55 @@ namespace XML_Exporter
                     }
                 }
             }
+
+            dataGridView1.Refresh();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            DataTable sheetData = LoadWorksheetInDataTable(@"..\..\testObjects\92 - Translation\KPI_Translation.xlsx", "Translator");
+            var fs = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\92 - Translation\KPI_Translation.csv";
+            dataTableCSV = readCSVFile(fs);
         }
 
-        DataTable LoadWorksheetInDataTable(string fileName, string sheetName)
+        private static DataTable readCSVFile(string fs)
         {
-            DataTable sheetData = new DataTable();
-            using (OleDbConnection conn = this.returnConnection(fileName))
+            DataTable dt = new DataTable("CSVFile");
+
+            using (File.OpenRead(fs))
+            using (var reader = new StreamReader(fs))
             {
-                conn.Open();
-                // retrieve the data using data adapter
-                OleDbDataAdapter sheetAdapter = new OleDbDataAdapter("select * from " + sheetName, conn);
-                sheetAdapter.Fill(sheetData);
-            }
-            return sheetData;
-        }
 
-        private OleDbConnection returnConnection(string fileName)
-        {
-            return new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileName + "; Extended Properties=Excel 12.0;");
+                bool headerRow = true;
+
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(',');
+
+                    if (headerRow) //dodaje header u datatable
+                    {
+                        foreach (var value in values)
+                        {
+                            dt.Columns.Add(new DataColumn(value));
+                        }
+                        headerRow = false;
+                        continue;
+                    }
+                    if (!headerRow) //dodaje ostale redove
+                    {
+                        DataRow dr = dt.NewRow();
+
+                        for (int i = 0; i < values.Length; i++)
+                        {
+                            dr[i] = values[i];
+                        }
+
+                        dt.Rows.Add(dr);
+                    }
+                }
+            }
+
+            return dt;
         }
     }
 }

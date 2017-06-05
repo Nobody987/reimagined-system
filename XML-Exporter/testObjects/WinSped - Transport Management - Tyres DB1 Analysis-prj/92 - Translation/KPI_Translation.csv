@@ -1,0 +1,9 @@
+ObjectName,DE,EN
+KPI_01,Stopp ,STOP
+KPI_02,Anzahl LS ,Number LS
+KPI_03,Tonnage ,Tonnage 
+KPI_04,Erlöse ,Revenue
+KPI_05,Tonnage/LS ,Tonnage/LS 
+KPI_06,Erlöse/Tonnage ,Erlöse/Tonnage 
+KPI_07,Tonnage/Stopp,Tonnage/Stop
+KPI_08,Erlöse/STOPP,Erlöse/Stop
