@@ -43,6 +43,9 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.button5 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.loadXMLBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.AuthorsDataSet)).BeginInit();
@@ -80,7 +83,7 @@
             this.WriteXML.Name = "WriteXML";
             this.WriteXML.Size = new System.Drawing.Size(95, 23);
             this.WriteXML.TabIndex = 4;
-            this.WriteXML.Text = "Write";
+            this.WriteXML.Text = "Write XML";
             this.WriteXML.UseVisualStyleBackColor = true;
             this.WriteXML.Click += new System.EventHandler(this.WriteXML_Click);
             // 
@@ -172,11 +175,43 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(12, 552);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(84, 23);
+            this.button4.TabIndex = 14;
+            this.button4.Text = "Open QVW";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // textBox4
+            // 
+            this.textBox4.AllowDrop = true;
+            this.textBox4.Location = new System.Drawing.Point(113, 555);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(431, 20);
+            this.textBox4.TabIndex = 15;
+            this.textBox4.Text = "C:\\Users\\slobodan.sredojevic\\Desktop\\ExcelToQV\\ExcelToQV.qvw";
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(736, 362);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(95, 23);
+            this.button5.TabIndex = 16;
+            this.button5.Text = "Write Excel";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1347, 587);
+            this.Controls.Add(this.button5);
+            this.Controls.Add(this.textBox4);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox1);
@@ -215,6 +250,9 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Button button5;
     }
 }
 

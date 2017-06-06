@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
@@ -16,7 +15,7 @@ namespace XML_Exporter
         List<string> ListTreeParents = new List<string>();
         List<string> ListTreeNodes = new List<string>();
         List<string> ListTreeNodeValues = new List<string>();
-        DataTable dt;
+        System.Data.DataTable dt;
 
         List<string> ListDataTableCopyTypes = new List<string>();
         List<string> ListDataTableCopyNodesPath = new List<string>();
@@ -26,7 +25,7 @@ namespace XML_Exporter
         List<string> ListReadCSVColumn = new List<string>();
 
         List<KeyValuePair<string, string>> ListKVPFieldsAndTables = new List<KeyValuePair<string, string>>();
-        private DataTable dataTableCSV;
+        private System.Data.DataTable dataTableCSV;
 
         public Form1()
         {
@@ -56,7 +55,7 @@ namespace XML_Exporter
             ListReadCSVFile.Clear();
             ListReadCSVColumn.Clear();
 
-            dt = new DataTable("Technical_Specification");
+            dt = new System.Data.DataTable("Technical_Specification");
             XmlDocument document = new XmlDocument();
             document.Load(filePath);
 
@@ -183,7 +182,7 @@ namespace XML_Exporter
             {
                 return;
             }
-            Point clientPoint = dataGridView1.PointToClient(new Point(e.X, e.Y));
+            System.Drawing.Point clientPoint = dataGridView1.PointToClient(new System.Drawing.Point(e.X, e.Y));
 
             // If the drag operation was a copy then add the row to the other control.
             if (e.Effect == DragDropEffects.Copy)
@@ -456,9 +455,9 @@ namespace XML_Exporter
             dataTableCSV = readCSVFile(fs);
         }
 
-        private static DataTable readCSVFile(string fs)
+        private static System.Data.DataTable readCSVFile(string fs)
         {
-            DataTable dt = new DataTable("CSVFile");
+            System.Data.DataTable dt = new System.Data.DataTable("CSVFile");
 
             using (File.OpenRead(fs))
             using (var reader = new StreamReader(fs))
@@ -495,6 +494,37 @@ namespace XML_Exporter
             }
 
             return dt;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            copyAlltoClipboard();
+            Microsoft.Office.Interop.Excel.Application xlexcel;
+            Microsoft.Office.Interop.Excel.Workbook xlWorkBook;
+            Microsoft.Office.Interop.Excel.Worksheet xlWorkSheet;
+            object misValue = System.Reflection.Missing.Value;
+            xlexcel = new Microsoft.Office.Interop.Excel.Application();
+            xlexcel.Visible = true;
+            xlWorkBook = xlexcel.Workbooks.Add(misValue);
+            xlWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+            Microsoft.Office.Interop.Excel.Range CR = (Microsoft.Office.Interop.Excel.Range)xlWorkSheet.Cells[1, 1];
+            CR.Select();
+            xlWorkSheet.PasteSpecial(CR, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, true);
+        }
+
+        private void copyAlltoClipboard()
+        {
+            dataGridView1.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
+            dataGridView1.MultiSelect = true;
+            dataGridView1.SelectAll();
+            DataObject dataObj = dataGridView1.GetClipboardContent();
+            if (dataObj != null)
+                Clipboard.SetDataObject(dataObj);
         }
     }
 }
