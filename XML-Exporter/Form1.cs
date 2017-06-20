@@ -114,25 +114,52 @@ namespace XML_Exporter
 
         private void button1_Click(object sender, EventArgs e)
         {
-            treeView1.Nodes.Clear();
-
+            string ROOT = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\80 - Application\WinSped - Transport Management - Tyres DB1 Analysis-prj\";
             string FILE_NAME = textBox2.Text;
-            string FILE_PATH = @"..\..\testObjects\WinSped - Transport Management - Tyres DB1 Analysis-prj\80 - Application\WinSped - Transport Management - Tyres DB1 Analysis-prj\" + FILE_NAME;
-            //string FILE_PATH = @"..\..\testObjects\" + FILE_NAME;
-            //string FILE_PATH = @"..\..\testObjects\document.xml";
+            string FILE_PATH = ROOT + FILE_NAME;
 
-            XmlDocument document = new XmlDocument();
-            document.Load(FILE_PATH);
-            XmlNode node = document.DocumentElement;
+            if (checkBox1.Checked == true)
+            {
+                string[] fileArray = Directory.GetFiles(ROOT, "CH*.xml", SearchOption.TopDirectoryOnly);
+                foreach (string item in fileArray)
+                {
+                    XmlDocument document = new XmlDocument();
+                    document.Load(item);
+                    XmlNode node = document.DocumentElement;
+
+                    AddNode(node, treeView1.Nodes.Add(node.Name));
+                    treeView1.ExpandAll();
+
+                    ListTreeNodes.Clear();          //ciste se jer se popunjavaju u returnNodesAndParents
+                    ListTreeParents.Clear();        //ciste se jer se popunjavaju u returnNodesAndParents
+                    ListTreeNodeValues.Clear();     //ciste se jer se popunjavaju u returnNodesAndParents
+
+                }
+
+                foreach (TreeNode rootNode in treeView1.Nodes)
+                {
+                    returnNodesAndParents(rootNode);
+                }
+            }
+
+            //treeView1.Nodes.Clear();
+
+            //XmlDocument document = new XmlDocument();
+            //document.Load(FILE_PATH);
+            //XmlNode node = document.DocumentElement;
 
 
-            AddNode(node, treeView1.Nodes.Add(node.Name));
-            treeView1.ExpandAll();
+            //AddNode(node, treeView1.Nodes.Add(node.Name));
+            //treeView1.ExpandAll();
 
-            ListTreeNodes.Clear();
-            ListTreeParents.Clear();
-            ListTreeNodeValues.Clear();
-            returnNodesAndParents(treeView1.Nodes[0]);
+            //ListTreeNodes.Clear();              //ciste se jer se popunjavaju u returnNodesAndParents
+            //ListTreeParents.Clear();            //ciste se jer se popunjavaju u returnNodesAndParents
+            //ListTreeNodeValues.Clear();         //ciste se jer se popunjavaju u returnNodesAndParents
+
+            //foreach (TreeNode item in treeView1.Nodes)
+            //{
+            //    returnNodesAndParents(item);
+            //}
         }
 
         private void buttonFold_Click(object sender, EventArgs e)
